@@ -1,0 +1,11 @@
+user_creds.json
+v
+tempstore.dat
+*.pyc
+.pytype
+invoice_files
+__pycache__
+invoice_extract
+bcon_robot.json
+config.yaml
+try_*

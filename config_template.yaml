@@ -1,0 +1,127 @@
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+google_application_credentials: 'bcon_robot.json'
+
+# Ignore any runtime errors when processing the invoices
+# (Incorrect product, missing columns etc).
+ignore_runtime_errors: True
+
+log_dir: '/var/tmp/bcon'
+
+# Select sharepoint or drive. The corresponding section below will need to be populated.
+invoice_storage: 'drive'
+
+bigquery:
+        # Replace <cloud project> below and make sure the dataset exists.
+        tables:
+                dash_ui: <cloud project>.bcon.dash_ui
+                dash_invoice_report: <cloud project>.bcon.dash_invoice_report
+                reports: <cloud project>.bcon.reports
+                invoices: <cloud project>.bcon.invoices
+                invoice_entries: <cloud project>.bcon.invoice_entries
+                admin_users: <cloud project>.bcon.admin_users
+                user_perms: <cloud project>.bcon.user_perms
+
+                # CM tables
+                cm_dash_ui: <cloud project>.bcon.cm_dash_ui
+                cm_dash_invoice_report: <cloud project>.bcon.cm_dash_invoice_report
+                cm_reports: <cloud project>.bcon.cm_reports
+                cm_user_perms: <cloud project>.bcon.cm_user_perms
+                cm_advertiser_accounts: <cloud project>.bcon.cm_advertiser_accounts
+                cm_user_perms_advertiser: <cloud project>.bcon.cm_user_perms_advertiser
+sharepoint:
+        user: <sharepoint user id>
+        pass: <sharepoint password>
+
+        # The following columns are available in the spreadsheet below.
+        #
+        # Full URL with domain to the sharepoint site.
+        # Ex: 'https://abc.sharepoint.com/sites/mysite/Page'
+        #
+        # Relative URL of the site starting from '/sites'.
+        # Ex: '/sites/mysite/Page'.
+        #
+        # Root folder under the URL.
+        # Ex: 'invoice_folder'.
+        #
+        # Path to the folder inside the root folder where the invoices are stored.
+        # Ex: 'path/to/the/folder'.
+        #
+        # Path to the folder where the processed invoices are moved to.
+        # Ex: '/path/to/the/folder/completed'.
+
+        sheet_id: '1r71fFRflRobhhSUJsS-ojZ1jFdiYSAx2cS3mZJPdN5k'
+        range: 'Sharepoint!A:E'
+
+        # Where to store and process the downloaded invoices.
+        download_path: '/tmp/bcon/invoice_files'
+        extract_path: '/tmp/bcon/invoice_extract'
+
+        # Use for testing. Setting this to False will not delete the downloaded invoices.
+        # This allows to run the sharepoint loader as the files will persist locally.
+        delete_downloaded_files: True
+
+        # Use for testing. Setting this to False will not mark the sharepoint
+        # files as completed.
+        mark_sharepoint_files_completed: True
+
+drive:
+        sheet_id: '1r71fFRflRobhhSUJsS-ojZ1jFdiYSAx2cS3mZJPdN5k'
+        range: 'Drive!A:E'
+
+        # Where to store and process the downloaded invoices.
+        download_path: '/tmp/bcon/invoice_files'
+        extract_path: '/tmp/bcon/invoice_extract'
+
+        # Use for testing. Setting this to False will not delete the downloaded invoices.
+        # This allows to run the sharepoint loader as the files will persist locally.
+        delete_downloaded_files: True
+
+        # Use for testing. Setting this to False will not mark the sharepoint
+        # files as completed.
+        mark_drive_files_completed: True
+
+sheets:
+        -
+                # Google sheets id.
+                # Ex: '1uXYi_0ogCzZJGvGkO6ZEY6VcOO5eIL4CVWbyyYUTwXE'.
+                sheet_id: <sheet id>
+
+                # Range for the partners.
+                # Ex: 'Sheet1!A:A'.
+                partners_range: <range>
+
+                # Range for the admin users.
+                # Ex: 'Sheet2!A:A'.
+                admin_users_range: <range>
+
+        -
+                sheet_id: <sheet id>
+                partners_range: <range>
+                admin_users_range: <range>
+
+dv360:
+        # If set to True, will try to use the current users credentials.
+        # If set to False, will try to use service account specified under
+        # google_application_credentials (see above).
+        #
+        # WARNING: Always set to False when deploying.
+        # Only reason to set this to True is for testing.
+
+        use_user_credentials: False
+
+cm:
+        use_user_credentials: False
+        report_name: 'B-Con reconciliation report'
